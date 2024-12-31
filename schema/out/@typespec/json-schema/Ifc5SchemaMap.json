@@ -1,0 +1,677 @@
+[
+    {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "Class.json",
+        "type": "object",
+        "properties": {
+            "def": {
+                "type": "string",
+                "const": "class"
+            },
+            "type": {
+                "$ref": "#/$defs/ClassType"
+            },
+            "name": {
+                "type": "string"
+            },
+            "children": {
+                "type": "array",
+                "items": {
+                    "$ref": "Def.json"
+                }
+            },
+            "inherits": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/$defs/reference"
+                }
+            }
+        },
+        "required": [
+            "def",
+            "name"
+        ],
+        "$defs": {
+            "ClassType": {
+                "type": "string",
+                "enum": [
+                    "UsdGeom:Mesh",
+                    "UsdGeom:Xform",
+                    "UsdGeom:BasisCurves",
+                    "UsdShade:Material",
+                    "UsdShade:Shader",
+                    "Xform"
+                ]
+            },
+            "reference": {
+                "type": "string",
+                "pattern": "</[A-Za-z0-9_/.:]+>"
+            }
+        }
+    },
+    {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "CustomDataComponent.json",
+        "type": "object",
+        "properties": {
+            "customdata": {}
+        },
+        "required": [
+            "customdata"
+        ]
+    },
+    {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "Def.json",
+        "type": "object",
+        "properties": {
+            "def": {
+                "type": "string",
+                "const": "def"
+            },
+            "type": {
+                "$ref": "#/$defs/ClassType"
+            },
+            "name": {
+                "type": "string"
+            },
+            "children": {
+                "type": "array",
+                "items": {
+                    "$ref": "Def.json"
+                }
+            },
+            "inherits": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/$defs/reference"
+                }
+            },
+            "attributes": {}
+        },
+        "required": [
+            "def",
+            "name"
+        ],
+        "$defs": {
+            "ClassType": {
+                "type": "string",
+                "enum": [
+                    "UsdGeom:Mesh",
+                    "UsdGeom:Xform",
+                    "UsdGeom:BasisCurves",
+                    "UsdShade:Material",
+                    "UsdShade:Shader",
+                    "Xform"
+                ]
+            },
+            "reference": {
+                "type": "string",
+                "pattern": "</[A-Za-z0-9_/.:]+>"
+            }
+        }
+    },
+    {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "Disclaimer.json",
+        "type": "object",
+        "properties": {
+            "disclaimer": {
+                "type": "string"
+            }
+        },
+        "required": [
+            "disclaimer"
+        ]
+    },
+    {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "ifc5alignmentComponent.json",
+        "type": "object",
+        "properties": {
+            "ifc5:alignment": {
+                "type": "object",
+                "properties": {
+                    "segments": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "ref": {
+                                    "$ref": "#/$defs/reference"
+                                }
+                            },
+                            "required": [
+                                "ref"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "segments"
+                ]
+            }
+        },
+        "required": [
+            "ifc5:alignment"
+        ],
+        "$defs": {
+            "reference": {
+                "type": "string",
+                "pattern": "</[A-Za-z0-9_/.:]+>"
+            }
+        }
+    },
+    {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "ifc5alignmentsegmentComponent.json",
+        "type": "object",
+        "properties": {
+            "ifc5:alignmentsegment": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "EndRadiusOfCurvature": {
+                                "type": "number"
+                            },
+                            "PredefinedType": {
+                                "anyOf": [
+                                    {
+                                        "type": "string",
+                                        "const": "LINE"
+                                    },
+                                    {
+                                        "type": "string",
+                                        "const": "CLOTHOID"
+                                    },
+                                    {
+                                        "type": "string",
+                                        "const": "CIRCULARARC"
+                                    },
+                                    {
+                                        "type": "string",
+                                        "const": "CONSTANTGRADIENT"
+                                    }
+                                ]
+                            },
+                            "SegmentLength": {
+                                "type": "number"
+                            },
+                            "StartDirection": {
+                                "type": "number"
+                            },
+                            "StartPoint": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                }
+                            },
+                            "StartRadiusOfCurvature": {
+                                "type": "number"
+                            }
+                        },
+                        "required": [
+                            "EndRadiusOfCurvature",
+                            "PredefinedType",
+                            "SegmentLength",
+                            "StartDirection",
+                            "StartPoint",
+                            "StartRadiusOfCurvature"
+                        ]
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "EndGradient": {
+                                "type": "number"
+                            },
+                            "PredefinedType": {
+                                "anyOf": [
+                                    {
+                                        "type": "string",
+                                        "const": "LINE"
+                                    },
+                                    {
+                                        "type": "string",
+                                        "const": "CLOTHOID"
+                                    },
+                                    {
+                                        "type": "string",
+                                        "const": "CIRCULARARC"
+                                    },
+                                    {
+                                        "type": "string",
+                                        "const": "CONSTANTGRADIENT"
+                                    }
+                                ]
+                            },
+                            "HorizontalLength": {
+                                "type": "number"
+                            },
+                            "StartDistAlong": {
+                                "type": "number"
+                            },
+                            "StartGradient": {
+                                "type": "number"
+                            },
+                            "StartHeight": {
+                                "type": "number"
+                            }
+                        },
+                        "required": [
+                            "EndGradient",
+                            "PredefinedType",
+                            "HorizontalLength",
+                            "StartDistAlong",
+                            "StartGradient",
+                            "StartHeight"
+                        ]
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "EndCantLeft": {
+                                "type": "number"
+                            },
+                            "EndCantRight": {
+                                "type": "number"
+                            },
+                            "HorizontalLength": {
+                                "type": "number"
+                            },
+                            "PredefinedType": {
+                                "anyOf": [
+                                    {
+                                        "type": "string",
+                                        "const": "CONSTANTCANT"
+                                    },
+                                    {
+                                        "type": "string",
+                                        "const": "LINEARTRANSITION"
+                                    }
+                                ]
+                            },
+                            "StartCantLeft": {
+                                "type": "number"
+                            },
+                            "StartCantRight": {
+                                "type": "number"
+                            },
+                            "StartDistAlong": {
+                                "type": "number"
+                            }
+                        },
+                        "required": [
+                            "EndCantLeft",
+                            "EndCantRight",
+                            "HorizontalLength",
+                            "PredefinedType",
+                            "StartCantLeft",
+                            "StartCantRight",
+                            "StartDistAlong"
+                        ]
+                    }
+                ]
+            }
+        },
+        "required": [
+            "ifc5:alignmentsegment"
+        ]
+    },
+    {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "Ifc5ClassComponent.json",
+        "type": "object",
+        "properties": {
+            "ifc5:class": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "uri": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "code",
+                    "uri"
+                ]
+            }
+        },
+        "required": [
+            "ifc5:class"
+        ]
+    },
+    {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "Ifc5File.json",
+        "type": "array",
+        "items": {
+            "anyOf": [
+                {
+                    "$ref": "Class.json"
+                },
+                {
+                    "$ref": "Def.json"
+                },
+                {
+                    "$ref": "Over.json"
+                },
+                {
+                    "$ref": "Disclaimer.json"
+                }
+            ]
+        }
+    },
+    {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "ifc5spaceboundaryComponent.json",
+        "type": "object",
+        "properties": {
+            "ifc5:spaceboundary": {
+                "type": "object",
+                "properties": {
+                    "relatedElement": {
+                        "type": "object",
+                        "properties": {
+                            "ref": {
+                                "$ref": "#/$defs/reference"
+                            }
+                        },
+                        "required": [
+                            "ref"
+                        ]
+                    }
+                },
+                "required": [
+                    "relatedElement"
+                ]
+            }
+        },
+        "required": [
+            "ifc5:spaceboundary"
+        ],
+        "$defs": {
+            "reference": {
+                "type": "string",
+                "pattern": "</[A-Za-z0-9_/.:]+>"
+            }
+        }
+    },
+    {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "NLSFBComponent.json",
+        "type": "object",
+        "properties": {
+            "nlsfb:class": {}
+        },
+        "required": [
+            "nlsfb:class"
+        ]
+    },
+    {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "Over.json",
+        "type": "object",
+        "properties": {
+            "def": {
+                "type": "string",
+                "const": "over"
+            },
+            "name": {
+                "type": "string"
+            },
+            "attributes": {
+                "anyOf": [
+                    {
+                        "$ref": "ifc5alignmentsegmentComponent.json"
+                    },
+                    {
+                        "$ref": "ifc5alignmentComponent.json"
+                    },
+                    {
+                        "$ref": "UsdShadeMaterialComponent.json"
+                    },
+                    {
+                        "$ref": "ifc5spaceboundaryComponent.json"
+                    },
+                    {
+                        "$ref": "NLSFBComponent.json"
+                    },
+                    {
+                        "$ref": "UsdGeomBasisCurvesComponent.json"
+                    },
+                    {
+                        "$ref": "PropertiesComponent.json"
+                    },
+                    {
+                        "$ref": "CustomDataComponent.json"
+                    },
+                    {
+                        "$ref": "xformOpComponent.json"
+                    },
+                    {
+                        "$ref": "UsdShadeMaterialBindingAPIComponent.json"
+                    },
+                    {
+                        "$ref": "UsdGeomMeshComponent.json"
+                    },
+                    {
+                        "$ref": "UsdGeomVisibilityAPIvisibilityComponent.json"
+                    },
+                    {
+                        "$ref": "Ifc5ClassComponent.json"
+                    }
+                ]
+            }
+        },
+        "required": [
+            "def",
+            "name",
+            "attributes"
+        ]
+    },
+    {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "PropertiesComponent.json",
+        "type": "object",
+        "properties": {
+            "ifc5:properties": {}
+        },
+        "required": [
+            "ifc5:properties"
+        ]
+    },
+    {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "UsdGeomBasisCurvesComponent.json",
+        "type": "object",
+        "properties": {
+            "UsdGeom:BasisCurves": {
+                "type": "object",
+                "properties": {
+                    "points": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                },
+                "required": [
+                    "points"
+                ]
+            }
+        },
+        "required": [
+            "UsdGeom:BasisCurves"
+        ]
+    },
+    {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "UsdGeomMeshComponent.json",
+        "type": "object",
+        "properties": {
+            "UsdGeom:Mesh": {
+                "type": "object",
+                "properties": {
+                    "faceVertexIndices": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647
+                        }
+                    },
+                    "points": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                },
+                "required": [
+                    "faceVertexIndices",
+                    "points"
+                ]
+            }
+        },
+        "required": [
+            "UsdGeom:Mesh"
+        ]
+    },
+    {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "UsdGeomVisibilityAPIvisibilityComponent.json",
+        "type": "object",
+        "properties": {
+            "UsdGeom:VisibilityAPI:visibility": {
+                "type": "object",
+                "properties": {
+                    "visibility": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "const": "visible"
+                            },
+                            {
+                                "type": "string",
+                                "const": "invisible"
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "visibility"
+                ]
+            }
+        },
+        "required": [
+            "UsdGeom:VisibilityAPI:visibility"
+        ]
+    },
+    {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "UsdShadeMaterialBindingAPIComponent.json",
+        "type": "object",
+        "properties": {
+            "UsdShade:MaterialBindingAPI": {
+                "type": "object",
+                "properties": {
+                    "material:binding": {
+                        "type": "object",
+                        "properties": {
+                            "ref": {
+                                "$ref": "#/$defs/reference"
+                            }
+                        },
+                        "required": [
+                            "ref"
+                        ]
+                    }
+                },
+                "required": [
+                    "material:binding"
+                ]
+            }
+        },
+        "required": [
+            "UsdShade:MaterialBindingAPI"
+        ],
+        "$defs": {
+            "reference": {
+                "type": "string",
+                "pattern": "</[A-Za-z0-9_/.:]+>"
+            }
+        }
+    },
+    {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "UsdShadeMaterialComponent.json",
+        "type": "object",
+        "properties": {
+            "UsdShade:Material": {
+                "type": "object",
+                "properties": {
+                    "outputs:surface.connect": {
+                        "type": "object",
+                        "properties": {
+                            "ref": {
+                                "$ref": "#/$defs/reference"
+                            }
+                        },
+                        "required": [
+                            "ref"
+                        ]
+                    }
+                },
+                "required": [
+                    "outputs:surface.connect"
+                ]
+            }
+        },
+        "required": [
+            "UsdShade:Material"
+        ],
+        "$defs": {
+            "reference": {
+                "type": "string",
+                "pattern": "</[A-Za-z0-9_/.:]+>"
+            }
+        }
+    },
+    {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "xformOpComponent.json",
+        "type": "object",
+        "properties": {
+            "xformOp": {
+                "type": "object",
+                "properties": {
+                    "transform": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                },
+                "required": [
+                    "transform"
+                ]
+            }
+        },
+        "required": [
+            "xformOp"
+        ]
+    }
+]

@@ -13,7 +13,8 @@
   },
   "scripts": {
     "compile": "tsp compile .",
-    "gen": "cd ./out/@typespec/json-schema/ && json2ts Ifc5File.json ./ts/ifc5file.d.ts --no-additionalProperties"
+    "gen": "cd ./out/@typespec/json-schema/ && json2ts Ifc5File.json ./ts/ifc5file.d.ts --no-additionalProperties",
+    "build-json-schema-import": "node buildimport.js"
   },
   "private": true,
   "dependencies": {

@@ -1,9 +1,12 @@
 // (C) buildingSMART International
 // published under MIT license 
 
+import Ajv from "ajv/dist/2020"
+
 import { ClassJson, DefJson, DisclaimerJson, Ifc5FileJson, OverJson } from '../../schema/out/@typespec/json-schema/ts/ifc5file';
 import { compose, ComposedObject, getChildByName } from './compose';
 import { compose2 } from './compose2';
+import ifc5fileschemaMap from "../../schema/out/@typespec/json-schema/Ifc5SchemaMap.json";
 
 let controls, renderer, scene, camera;
 type datastype = [string, Ifc5FileJson][];
@@ -212,8 +215,20 @@ function createLayerDom() {
     });
 }
 
-export default function addModel(name, m: Ifc5FileJson) {
-    datas.push([name, m]);
+export default function addModel(name, modelData: any) {
+    const ajv = new Ajv({schemas: ifc5fileschemaMap});
+    const validate = ajv.getSchema("Ifc5File.json")!;
+    const valid = validate(modelData);
+    if (!valid)
+    {
+        let err = `Your IFC5 file did not pass validation, please check if your file is correct using the json schema files in https://github.com/buildingSMART/IFC5-development.\n(This error can also be found in the console) \n\n Validation error: \n` + JSON.stringify(validate.errors, null, 4);
+        console.error(err);
+        alert(err);
+        return;
+    }
+    const validatedModelData = modelData as Ifc5FileJson;
+
+    datas.push([name, validatedModelData]);
     createLayerDom();
     composeAndRender();
 }
