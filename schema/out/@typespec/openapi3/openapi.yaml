@@ -3,7 +3,51 @@ info:
   title: (title)
   version: 0.0.0
 tags: []
-paths: {}
+paths:
+  /layers:
+    get:
+      operationId: LayerStore_list
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Layer'
+  /layers/create:
+    post:
+      operationId: LayerStore_create
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LayerCreateCommand'
+  /layers/{id}:
+    get:
+      operationId: LayerStore_get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Layer'
+        '404':
+          description: The server cannot find the requested resource.
 components:
   schemas:
     ArrayRestrictions:
@@ -118,6 +162,20 @@ components:
           $ref: '#/components/schemas/ObjectRestrictions'
         relationRestrictions:
           $ref: '#/components/schemas/RelationRestrictions'
+    Layer:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+    LayerCreateCommand:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
     ObjectRestrictions:
       type: object
       required:

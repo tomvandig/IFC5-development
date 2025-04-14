@@ -43,12 +43,14 @@
       }
     },
     "bsi::ifc::v5a::prop::volume": {
+      "uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/5/prop/NetVolume",
       "value": {
           "dataType": "Real",
           "quantityKind": "Volume"
       }
     },
     "bsi::ifc::v5a::prop::height": {
+      "uri": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/5/prop/Height",
       "value": {
           "dataType": "Real",
           "quantityKind": "Length"
