@@ -4,27 +4,35 @@ import "./ifcx-alpha.tsp";
 
 using Http;
 
-model Layer {
-    id: string;
+model LayerRevision
+{
+    hash: string;
+    origin?: FederatedLayerRevision[];
 }
 
-model LayerCommit
+model FederatedLayerRevision
 {
-    msg: string;
-    diff: IfcxFile;
+    layerID: string;
+    hash: string;
+}
+
+model Layer {
+    id: string;
+    name: string;
+    revisions: LayerRevision[];
+    federatedLayers: FederatedLayerRevision[];
 }
 
 model LayerCreateCommand {
     id: string;
     name: string;
-    filter: string;
-    federatedLayers: string[];
+    federatedLayers: FederatedLayerRevision[];
 }
-
 
 model LayerUpdateCommand {
     id: string;
     name: string;
+    federatedLayers: FederatedLayerRevision[];
 }
 
 model LayerDeleteCommand {
@@ -69,14 +77,6 @@ namespace IfcxApi {
                 @statusCode statusCode: 404;
             };
             
-            @route("/tree/*")
-            @get op tree(@path id: string, @query recursive: boolean, @query compose: boolean): {
-                @statusCode statusCode: 200;
-                @body treenode: IfcxNode;
-            } | {
-                @statusCode statusCode: 404;
-            };
-            
             @route("/push")
             @put op push(@path id: string, @body ifcxFile: HttpIfcxFile): {
                 @statusCode statusCode: 200;
@@ -84,13 +84,28 @@ namespace IfcxApi {
                 @statusCode statusCode: 404;
             };
             
-            @route("/pull")
-            @get op pull(@path id: string): {
-                @statusCode statusCode: 200;
-                @body ifcxFile:  HttpIfcxFile;
-            } | {
-                @statusCode statusCode: 404;
-            };
+            @route("{revision}")
+            namespace LayerHistory
+            {
+                @route("")
+                @get op get(@path id: string, @path revision: string): LayerRevision;
+    
+                @route("ifcx")
+                @get op ifcx(@path id: string, @path revision: string): {
+                    @statusCode statusCode: 200;
+                    @body ifcxFile:  HttpIfcxFile;
+                } | {
+                    @statusCode statusCode: 404;
+                };
+
+                @route("/tree/*")
+                @get op tree(@path id: string, @path revision: string, @query recursive: boolean, @query collapse: boolean, @query compose: boolean): {
+                    @statusCode statusCode: 200;
+                    @body treenode: IfcxNode;
+                } | {
+                    @statusCode statusCode: 404;
+                };
+            }
         }
     }
 }

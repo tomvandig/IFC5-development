@@ -71,25 +71,6 @@ paths:
                 $ref: '#/components/schemas/Layer'
         '404':
           description: The server cannot find the requested resource.
-  /ifc/v5a/layers/{id}/pull:
-    get:
-      operationId: LayerApi_pull
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: string
-                format: binary
-        '404':
-          description: The server cannot find the requested resource.
   /ifc/v5a/layers/{id}/push:
     put:
       operationId: LayerApi_push
@@ -111,16 +92,72 @@ paths:
             schema:
               type: string
               format: binary
-  /ifc/v5a/layers/{id}/tree/*:
+  /ifc/v5a/layers/{id}/{revision}:
     get:
-      operationId: LayerApi_tree
+      operationId: LayerHistory_get
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: string
+        - name: revision
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LayerRevision'
+  /ifc/v5a/layers/{id}/{revision}/ifcx:
+    get:
+      operationId: LayerHistory_ifcx
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: revision
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: The server cannot find the requested resource.
+  /ifc/v5a/layers/{id}/{revision}/tree/*:
+    get:
+      operationId: LayerHistory_tree
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: revision
+          in: path
+          required: true
+          schema:
+            type: string
         - name: recursive
+          in: query
+          required: true
+          schema:
+            type: boolean
+          explode: false
+        - name: collapse
           in: query
           required: true
           schema:
@@ -143,6 +180,16 @@ paths:
           description: The server cannot find the requested resource.
 components:
   schemas:
+    FederatedLayerRevision:
+      type: object
+      required:
+        - layerID
+        - hash
+      properties:
+        layerID:
+          type: string
+        hash:
+          type: string
     IfcxNode:
       type: object
       required:
@@ -167,27 +214,37 @@ components:
       type: object
       required:
         - id
-      properties:
-        id:
-          type: string
-    LayerCreateCommand:
-      type: object
-      required:
-        - id
         - name
-        - filter
+        - revisions
         - federatedLayers
       properties:
         id:
           type: string
         name:
           type: string
-        filter:
+        revisions:
+          type: array
+          items:
+            $ref: '#/components/schemas/LayerRevision'
+        federatedLayers:
+          type: array
+          items:
+            $ref: '#/components/schemas/FederatedLayerRevision'
+    LayerCreateCommand:
+      type: object
+      required:
+        - id
+        - name
+        - federatedLayers
+      properties:
+        id:
+          type: string
+        name:
           type: string
         federatedLayers:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/FederatedLayerRevision'
     LayerDeleteCommand:
       type: object
       required:
@@ -195,16 +252,32 @@ components:
       properties:
         id:
           type: string
+    LayerRevision:
+      type: object
+      required:
+        - hash
+      properties:
+        hash:
+          type: string
+        origin:
+          type: array
+          items:
+            $ref: '#/components/schemas/FederatedLayerRevision'
     LayerUpdateCommand:
       type: object
       required:
         - id
         - name
+        - federatedLayers
       properties:
         id:
           type: string
         name:
           type: string
+        federatedLayers:
+          type: array
+          items:
+            $ref: '#/components/schemas/FederatedLayerRevision'
     path:
       type: string
       pattern: </[A-Za-z0-9_/.:]+>
