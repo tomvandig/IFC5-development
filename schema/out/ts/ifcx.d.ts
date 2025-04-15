@@ -36,22 +36,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/ifc/v5a/layers/{id}/pull": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["LayerApi_pull"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/ifc/v5a/layers/{id}/push": {
         parameters: {
             query?: never;
@@ -68,14 +52,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/ifc/v5a/layers/{id}/tree/*": {
+    "/ifc/v5a/layers/{id}/{revision}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["LayerApi_tree"];
+        get: operations["LayerHistory_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/ifc/v5a/layers/{id}/{revision}/ifcx": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["LayerHistory_ifcx"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/ifc/v5a/layers/{id}/{revision}/tree/*": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["LayerHistory_tree"];
         put?: never;
         post?: never;
         delete?: never;
@@ -88,6 +104,10 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        FederatedLayerRevision: {
+            layerID: string;
+            hash: string;
+        };
         IfcxNode: {
             identifier: components["schemas"]["path"];
             children?: {
@@ -102,19 +122,26 @@ export interface components {
         };
         Layer: {
             id: string;
+            name: string;
+            revisions: components["schemas"]["LayerRevision"][];
+            federatedLayers: components["schemas"]["FederatedLayerRevision"][];
         };
         LayerCreateCommand: {
             id: string;
             name: string;
-            filter: string;
-            federatedLayers: string[];
+            federatedLayers: components["schemas"]["FederatedLayerRevision"][];
         };
         LayerDeleteCommand: {
             id: string;
         };
+        LayerRevision: {
+            hash: string;
+            origin?: components["schemas"]["FederatedLayerRevision"][];
+        };
         LayerUpdateCommand: {
             id: string;
             name: string;
+            federatedLayers: components["schemas"]["FederatedLayerRevision"][];
         };
         path: string;
     };
@@ -241,35 +268,6 @@ export interface operations {
             };
         };
     };
-    LayerApi_pull: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": string;
-                };
-            };
-            /** @description The server cannot find the requested resource. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
     LayerApi_push: {
         parameters: {
             query?: never;
@@ -301,15 +299,70 @@ export interface operations {
             };
         };
     };
-    LayerApi_tree: {
+    LayerHistory_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                revision: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LayerRevision"];
+                };
+            };
+        };
+    };
+    LayerHistory_ifcx: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                revision: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string;
+                };
+            };
+            /** @description The server cannot find the requested resource. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    LayerHistory_tree: {
         parameters: {
             query: {
                 recursive: boolean;
+                collapse: boolean;
                 compose: boolean;
             };
             header?: never;
             path: {
                 id: string;
+                revision: string;
             };
             cookie?: never;
         };
