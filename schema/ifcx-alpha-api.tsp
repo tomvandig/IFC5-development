@@ -4,22 +4,22 @@ import "./ifcx-alpha.tsp";
 
 using Http;
 
-model LayerRevision
-{
-    hash: string;
-    origin?: FederatedLayerRevision[];
-}
-
 model FederatedLayerRevision
 {
     layerID: string;
     hash: string;
 }
 
-model Layer {
+model LayerRevision
+{
+    hash: string;
+    origin?: FederatedLayerRevision[];
+}
+
+model LayerResponse {
     id: string;
     name: string;
-    revisions: LayerRevision[];
+    head: LayerRevision;
     federatedLayers: FederatedLayerRevision[];
 }
 
@@ -49,7 +49,7 @@ namespace IfcxApi {
     @route("/layers")
     namespace LayersApi {
         @route("")
-        @get op list(): Layer[];
+        @get op list(): LayerResponse[];
         
         @route("")
         @post op create(@body command: LayerCreateCommand): {
@@ -72,7 +72,15 @@ namespace IfcxApi {
             @route("")
             @get op get(@path id: string): {
                 @statusCode statusCode: 200;
-                @body layer: Layer;
+                @body layer: LayerResponse;
+            } | {
+                @statusCode statusCode: 404;
+            };
+            
+            @route("revisions")
+            @get op revisions(@path id: string): {
+                @statusCode statusCode: 200;
+                @body layer: LayerRevision[];
             } | {
                 @statusCode statusCode: 404;
             };

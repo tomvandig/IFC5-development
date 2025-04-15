@@ -52,6 +52,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/ifc/v5a/layers/{id}/revisions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["LayerApi_revisions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/ifc/v5a/layers/{id}/{revision}": {
         parameters: {
             query?: never;
@@ -120,12 +136,6 @@ export interface components {
                 [key: string]: unknown;
             };
         };
-        Layer: {
-            id: string;
-            name: string;
-            revisions: components["schemas"]["LayerRevision"][];
-            federatedLayers: components["schemas"]["FederatedLayerRevision"][];
-        };
         LayerCreateCommand: {
             id: string;
             name: string;
@@ -133,6 +143,12 @@ export interface components {
         };
         LayerDeleteCommand: {
             id: string;
+        };
+        LayerResponse: {
+            id: string;
+            name: string;
+            head: components["schemas"]["LayerRevision"];
+            federatedLayers: components["schemas"]["FederatedLayerRevision"][];
         };
         LayerRevision: {
             hash: string;
@@ -168,7 +184,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Layer"][];
+                    "application/json": components["schemas"]["LayerResponse"][];
                 };
             };
         };
@@ -256,7 +272,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Layer"];
+                    "application/json": components["schemas"]["LayerResponse"];
                 };
             };
             /** @description The server cannot find the requested resource. */
@@ -289,6 +305,35 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description The server cannot find the requested resource. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    LayerApi_revisions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LayerRevision"][];
+                };
             };
             /** @description The server cannot find the requested resource. */
             404: {

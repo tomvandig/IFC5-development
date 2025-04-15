@@ -16,7 +16,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Layer'
+                  $ref: '#/components/schemas/LayerResponse'
     post:
       operationId: LayersApi_create
       parameters: []
@@ -68,7 +68,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Layer'
+                $ref: '#/components/schemas/LayerResponse'
         '404':
           description: The server cannot find the requested resource.
   /ifc/v5a/layers/{id}/push:
@@ -92,6 +92,26 @@ paths:
             schema:
               type: string
               format: binary
+  /ifc/v5a/layers/{id}/revisions:
+    get:
+      operationId: LayerApi_revisions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LayerRevision'
+        '404':
+          description: The server cannot find the requested resource.
   /ifc/v5a/layers/{id}/{revision}:
     get:
       operationId: LayerHistory_get
@@ -210,26 +230,6 @@ components:
         attributes:
           type: object
           additionalProperties: {}
-    Layer:
-      type: object
-      required:
-        - id
-        - name
-        - revisions
-        - federatedLayers
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        revisions:
-          type: array
-          items:
-            $ref: '#/components/schemas/LayerRevision'
-        federatedLayers:
-          type: array
-          items:
-            $ref: '#/components/schemas/FederatedLayerRevision'
     LayerCreateCommand:
       type: object
       required:
@@ -252,6 +252,24 @@ components:
       properties:
         id:
           type: string
+    LayerResponse:
+      type: object
+      required:
+        - id
+        - name
+        - head
+        - federatedLayers
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        head:
+          $ref: '#/components/schemas/LayerRevision'
+        federatedLayers:
+          type: array
+          items:
+            $ref: '#/components/schemas/FederatedLayerRevision'
     LayerRevision:
       type: object
       required:
