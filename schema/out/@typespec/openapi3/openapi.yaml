@@ -4,9 +4,9 @@ info:
   version: 0.0.0
 tags: []
 paths:
-  /layers:
+  /ifc/v5a/layers:
     get:
-      operationId: LayerStore_list
+      operationId: LayersApi_list
       parameters: []
       responses:
         '200':
@@ -17,9 +17,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Layer'
-  /layers/create:
     post:
-      operationId: LayerStore_create
+      operationId: LayersApi_create
       parameters: []
       responses:
         '200':
@@ -30,9 +29,33 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/LayerCreateCommand'
-  /layers/{id}:
+    put:
+      operationId: LayersApi_update
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LayerUpdateCommand'
+    delete:
+      operationId: LayersApi_delete
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LayerDeleteCommand'
+  /ifc/v5a/layers/{id}:
     get:
-      operationId: LayerStore_get
+      operationId: LayerApi_get
       parameters:
         - name: id
           in: path
@@ -48,70 +71,59 @@ paths:
                 $ref: '#/components/schemas/Layer'
         '404':
           description: The server cannot find the requested resource.
+  /ifc/v5a/layers/{id}/commit:
+    put:
+      operationId: LayerApi_commit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+        '404':
+          description: The server cannot find the requested resource.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+              format: binary
+  /ifc/v5a/layers/{id}/tree/*:
+    get:
+      operationId: LayerApi_tree
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: recursive
+          in: query
+          required: true
+          schema:
+            type: boolean
+          explode: false
+        - name: compose
+          in: query
+          required: true
+          schema:
+            type: boolean
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IfcxNode'
+        '404':
+          description: The server cannot find the requested resource.
 components:
   schemas:
-    ArrayRestrictions:
-      type: object
-      required:
-        - value
-      properties:
-        min:
-          type: number
-        max:
-          type: number
-        value:
-          $ref: '#/components/schemas/IfcxValueDescription'
-    DataType:
-      type: string
-      enum:
-        - Real
-        - Boolean
-        - Integer
-        - String
-        - DateTime
-        - Enum
-        - Array
-        - Object
-        - Relation
-    EnumRestrictions:
-      type: object
-      required:
-        - options
-      properties:
-        options:
-          type: array
-          items:
-            type: string
-    IfcxFile:
-      type: object
-      required:
-        - header
-        - schemas
-        - data
-      properties:
-        header:
-          $ref: '#/components/schemas/IfcxHeader'
-        schemas:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/IfcxSchema'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/IfcxNode'
-    IfcxHeader:
-      type: object
-      required:
-        - version
-        - author
-        - timestamp
-      properties:
-        version:
-          type: string
-        author:
-          type: string
-        timestamp:
-          type: string
     IfcxNode:
       type: object
       required:
@@ -132,36 +144,6 @@ components:
         attributes:
           type: object
           additionalProperties: {}
-    IfcxSchema:
-      type: object
-      required:
-        - value
-      properties:
-        uri:
-          type: string
-        value:
-          $ref: '#/components/schemas/IfcxValueDescription'
-    IfcxValueDescription:
-      type: object
-      required:
-        - dataType
-      properties:
-        dataType:
-          $ref: '#/components/schemas/DataType'
-        inherits:
-          type: array
-          items:
-            type: string
-        quantityKind:
-          $ref: '#/components/schemas/QuantityKind'
-        enumRestrictions:
-          $ref: '#/components/schemas/EnumRestrictions'
-        arrayRestrictions:
-          $ref: '#/components/schemas/ArrayRestrictions'
-        objectRestrictions:
-          $ref: '#/components/schemas/ObjectRestrictions'
-        relationRestrictions:
-          $ref: '#/components/schemas/RelationRestrictions'
     Layer:
       type: object
       required:
@@ -173,45 +155,37 @@ components:
       type: object
       required:
         - id
+        - name
+        - filter
+        - federatedLayers
       properties:
         id:
           type: string
-    ObjectRestrictions:
-      type: object
-      required:
-        - values
-      properties:
-        values:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/IfcxValueDescription'
-    QuantityKind:
-      type: string
-      enum:
-        - Plane angle
-        - Thermodynamic temperature
-        - Electric current
-        - Time
-        - Frequency
-        - Mass
-        - Length
-        - Linear velocity
-        - Force
-        - Pressure
-        - Area
-        - Energy
-        - Power
-        - Volume
-    RelationRestrictions:
-      type: object
-      required:
-        - type
-      properties:
-        type:
+        name:
           type: string
-    code:
-      type: string
-      pattern: </[A-Za-z0-9]+>
+        filter:
+          type: string
+        federatedLayers:
+          type: array
+          items:
+            type: string
+    LayerDeleteCommand:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+    LayerUpdateCommand:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
     path:
       type: string
       pattern: </[A-Za-z0-9_/.:]+>

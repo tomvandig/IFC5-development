@@ -3,32 +3,75 @@
  * Do not make direct changes to the file.
  */
 
-export type paths = Record<string, never>;
+export interface paths {
+    "/ifc/v5a/layers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["LayersApi_list"];
+        put: operations["LayersApi_update"];
+        post: operations["LayersApi_create"];
+        delete: operations["LayersApi_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/ifc/v5a/layers/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["LayerApi_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/ifc/v5a/layers/{id}/commit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["LayerApi_commit"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/ifc/v5a/layers/{id}/tree/*": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["LayerApi_tree"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+}
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        ArrayRestrictions: {
-            min?: number;
-            max?: number;
-            value: components["schemas"]["IfcxValueDescription"];
-        };
-        /** @enum {string} */
-        DataType: "Real" | "Boolean" | "Integer" | "String" | "DateTime" | "Enum" | "Array" | "Object" | "Relation";
-        EnumRestrictions: {
-            options: string[];
-        };
-        IfcxFile: {
-            header: components["schemas"]["IfcxHeader"];
-            schemas: {
-                [key: string]: components["schemas"]["IfcxSchema"];
-            };
-            data: components["schemas"]["IfcxNode"][];
-        };
-        IfcxHeader: {
-            version: string;
-            author: string;
-            timestamp: string;
-        };
         IfcxNode: {
             identifier: components["schemas"]["path"];
             children?: {
@@ -41,30 +84,22 @@ export interface components {
                 [key: string]: unknown;
             };
         };
-        IfcxSchema: {
-            uri?: string;
-            value: components["schemas"]["IfcxValueDescription"];
+        Layer: {
+            id: string;
         };
-        IfcxValueDescription: {
-            dataType: components["schemas"]["DataType"];
-            inherits?: string[];
-            quantityKind?: components["schemas"]["QuantityKind"];
-            enumRestrictions?: components["schemas"]["EnumRestrictions"];
-            arrayRestrictions?: components["schemas"]["ArrayRestrictions"];
-            objectRestrictions?: components["schemas"]["ObjectRestrictions"];
-            relationRestrictions?: components["schemas"]["RelationRestrictions"];
+        LayerCreateCommand: {
+            id: string;
+            name: string;
+            filter: string;
+            federatedLayers: string[];
         };
-        ObjectRestrictions: {
-            values: {
-                [key: string]: components["schemas"]["IfcxValueDescription"];
-            };
+        LayerDeleteCommand: {
+            id: string;
         };
-        /** @enum {string} */
-        QuantityKind: "Plane angle" | "Thermodynamic temperature" | "Electric current" | "Time" | "Frequency" | "Mass" | "Length" | "Linear velocity" | "Force" | "Pressure" | "Area" | "Energy" | "Power" | "Volume";
-        RelationRestrictions: {
-            type: string;
+        LayerUpdateCommand: {
+            id: string;
+            name: string;
         };
-        code: string;
         path: string;
     };
     responses: never;
@@ -74,4 +109,183 @@ export interface components {
     pathItems: never;
 }
 export type $defs = Record<string, never>;
-export type operations = Record<string, never>;
+export interface operations {
+    LayersApi_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Layer"][];
+                };
+            };
+        };
+    };
+    LayersApi_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LayerUpdateCommand"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    LayersApi_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LayerCreateCommand"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    LayersApi_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LayerDeleteCommand"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    LayerApi_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Layer"];
+                };
+            };
+            /** @description The server cannot find the requested resource. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    LayerApi_commit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": string;
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The server cannot find the requested resource. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    LayerApi_tree: {
+        parameters: {
+            query: {
+                recursive: boolean;
+                compose: boolean;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IfcxNode"];
+                };
+            };
+            /** @description The server cannot find the requested resource. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+}
