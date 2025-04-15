@@ -31,7 +31,7 @@ model LayerDeleteCommand {
     id: string;
 }
 
-model IfcxFileUpload extends Http.File {
+model HttpIfcxFile extends Http.File {
     contentType: "application/json";
 }
 
@@ -77,9 +77,17 @@ namespace IfcxApi {
                 @statusCode statusCode: 404;
             };
             
-            @route("/commit")
-            @put op commit(@path id: string, @body ifcxFile: IfcxFileUpload): {
+            @route("/push")
+            @put op push(@path id: string, @body ifcxFile: HttpIfcxFile): {
                 @statusCode statusCode: 200;
+            } | {
+                @statusCode statusCode: 404;
+            };
+            
+            @route("/pull")
+            @get op pull(@path id: string): {
+                @statusCode statusCode: 200;
+                @body ifcxFile:  HttpIfcxFile;
             } | {
                 @statusCode statusCode: 404;
             };

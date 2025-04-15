@@ -36,7 +36,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/ifc/v5a/layers/{id}/commit": {
+    "/ifc/v5a/layers/{id}/pull": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["LayerApi_pull"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/ifc/v5a/layers/{id}/push": {
         parameters: {
             query?: never;
             header?: never;
@@ -44,7 +60,7 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put: operations["LayerApi_commit"];
+        put: operations["LayerApi_push"];
         post?: never;
         delete?: never;
         options?: never;
@@ -225,7 +241,36 @@ export interface operations {
             };
         };
     };
-    LayerApi_commit: {
+    LayerApi_pull: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string;
+                };
+            };
+            /** @description The server cannot find the requested resource. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    LayerApi_push: {
         parameters: {
             query?: never;
             header?: never;
