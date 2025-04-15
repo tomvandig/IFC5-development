@@ -1,7 +1,7 @@
 emit:
-  # - "@typespec/json-schema"
   - "@typespec/openapi3"
+  - "@typespec/http-server-js"
 options:
-  "@typespec/json-schema":
-    file-type: json
+  "@typespec/http-server-js":
+    express: true
 output-dir: "{project-root}/out"

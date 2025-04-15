@@ -1,6 +1,6 @@
 import "@typespec/http";
 
-import "./ifcx-alpha.tsp";
+import "./ifcx-alpha-data.tsp";
 
 using Http;
 
@@ -32,7 +32,6 @@ model LayerCreateCommand {
 model LayerUpdateCommand {
     id: string;
     name: string;
-    federatedLayers: FederatedLayerRevision[];
 }
 
 model LayerDeleteCommand {
@@ -101,7 +100,7 @@ namespace IfcxApi {
                 @route("ifcx")
                 @get op ifcx(@path id: string, @path revision: string): {
                     @statusCode statusCode: 200;
-                    @body ifcxFile:  HttpIfcxFile;
+                    @body ifcxFile: HttpIfcxFile;
                 } | {
                     @statusCode statusCode: 404;
                 };
@@ -116,4 +115,7 @@ namespace IfcxApi {
             }
         }
     }
+    
+    @route("dummy")
+    @get op dummy(): IfcxFile;
 }

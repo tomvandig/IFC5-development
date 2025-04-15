@@ -4,6 +4,22 @@
  */
 
 export interface paths {
+    "/ifc/v5a/dummy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["dummy"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/ifc/v5a/layers": {
         parameters: {
             query?: never;
@@ -120,9 +136,31 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        ArrayRestrictions: {
+            min?: number;
+            max?: number;
+            value: components["schemas"]["IfcxValueDescription"];
+        };
+        /** @enum {string} */
+        DataType: "Real" | "Boolean" | "Integer" | "String" | "DateTime" | "Enum" | "Array" | "Object" | "Relation";
+        EnumRestrictions: {
+            options: string[];
+        };
         FederatedLayerRevision: {
             layerID: string;
             hash: string;
+        };
+        IfcxFile: {
+            header: components["schemas"]["IfcxHeader"];
+            schemas: {
+                [key: string]: components["schemas"]["IfcxSchema"];
+            };
+            data: components["schemas"]["IfcxNode"][];
+        };
+        IfcxHeader: {
+            version: string;
+            author: string;
+            timestamp: string;
         };
         IfcxNode: {
             identifier: components["schemas"]["path"];
@@ -135,6 +173,19 @@ export interface components {
             attributes?: {
                 [key: string]: unknown;
             };
+        };
+        IfcxSchema: {
+            uri?: string;
+            value: components["schemas"]["IfcxValueDescription"];
+        };
+        IfcxValueDescription: {
+            dataType: components["schemas"]["DataType"];
+            inherits?: string[];
+            quantityKind?: components["schemas"]["QuantityKind"];
+            enumRestrictions?: components["schemas"]["EnumRestrictions"];
+            arrayRestrictions?: components["schemas"]["ArrayRestrictions"];
+            objectRestrictions?: components["schemas"]["ObjectRestrictions"];
+            relationRestrictions?: components["schemas"]["RelationRestrictions"];
         };
         LayerCreateCommand: {
             id: string;
@@ -157,7 +208,16 @@ export interface components {
         LayerUpdateCommand: {
             id: string;
             name: string;
-            federatedLayers: components["schemas"]["FederatedLayerRevision"][];
+        };
+        ObjectRestrictions: {
+            values: {
+                [key: string]: components["schemas"]["IfcxValueDescription"];
+            };
+        };
+        /** @enum {string} */
+        QuantityKind: "Plane angle" | "Thermodynamic temperature" | "Electric current" | "Time" | "Frequency" | "Mass" | "Length" | "Linear velocity" | "Force" | "Pressure" | "Area" | "Energy" | "Power" | "Volume";
+        RelationRestrictions: {
+            type: string;
         };
         path: string;
     };
@@ -169,6 +229,26 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    dummy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IfcxFile"];
+                };
+            };
+        };
+    };
     LayersApi_list: {
         parameters: {
             query?: never;

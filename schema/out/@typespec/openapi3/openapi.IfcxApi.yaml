@@ -4,17 +4,6 @@ info:
   version: 0.0.0
 tags: []
 paths:
-  /ifc/v5a/dummy:
-    get:
-      operationId: dummy
-      parameters: []
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IfcxFile'
   /ifc/v5a/layers:
     get:
       operationId: LayersApi_list
@@ -211,38 +200,6 @@ paths:
           description: The server cannot find the requested resource.
 components:
   schemas:
-    ArrayRestrictions:
-      type: object
-      required:
-        - value
-      properties:
-        min:
-          type: number
-        max:
-          type: number
-        value:
-          $ref: '#/components/schemas/IfcxValueDescription'
-    DataType:
-      type: string
-      enum:
-        - Real
-        - Boolean
-        - Integer
-        - String
-        - DateTime
-        - Enum
-        - Array
-        - Object
-        - Relation
-    EnumRestrictions:
-      type: object
-      required:
-        - options
-      properties:
-        options:
-          type: array
-          items:
-            type: string
     FederatedLayerRevision:
       type: object
       required:
@@ -252,36 +209,6 @@ components:
         layerID:
           type: string
         hash:
-          type: string
-    IfcxFile:
-      type: object
-      required:
-        - header
-        - schemas
-        - data
-      properties:
-        header:
-          $ref: '#/components/schemas/IfcxHeader'
-        schemas:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/IfcxSchema'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/IfcxNode'
-    IfcxHeader:
-      type: object
-      required:
-        - version
-        - author
-        - timestamp
-      properties:
-        version:
-          type: string
-        author:
-          type: string
-        timestamp:
           type: string
     IfcxNode:
       type: object
@@ -303,36 +230,6 @@ components:
         attributes:
           type: object
           additionalProperties: {}
-    IfcxSchema:
-      type: object
-      required:
-        - value
-      properties:
-        uri:
-          type: string
-        value:
-          $ref: '#/components/schemas/IfcxValueDescription'
-    IfcxValueDescription:
-      type: object
-      required:
-        - dataType
-      properties:
-        dataType:
-          $ref: '#/components/schemas/DataType'
-        inherits:
-          type: array
-          items:
-            type: string
-        quantityKind:
-          $ref: '#/components/schemas/QuantityKind'
-        enumRestrictions:
-          $ref: '#/components/schemas/EnumRestrictions'
-        arrayRestrictions:
-          $ref: '#/components/schemas/ArrayRestrictions'
-        objectRestrictions:
-          $ref: '#/components/schemas/ObjectRestrictions'
-        relationRestrictions:
-          $ref: '#/components/schemas/RelationRestrictions'
     LayerCreateCommand:
       type: object
       required:
@@ -393,39 +290,6 @@ components:
         id:
           type: string
         name:
-          type: string
-    ObjectRestrictions:
-      type: object
-      required:
-        - values
-      properties:
-        values:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/IfcxValueDescription'
-    QuantityKind:
-      type: string
-      enum:
-        - Plane angle
-        - Thermodynamic temperature
-        - Electric current
-        - Time
-        - Frequency
-        - Mass
-        - Length
-        - Linear velocity
-        - Force
-        - Pressure
-        - Area
-        - Energy
-        - Power
-        - Volume
-    RelationRestrictions:
-      type: object
-      required:
-        - type
-      properties:
-        type:
           type: string
     path:
       type: string
