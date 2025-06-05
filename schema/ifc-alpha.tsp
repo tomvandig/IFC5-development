@@ -11,14 +11,22 @@ scalar path extends string;
 @pattern("</[A-Za-z0-9]+>")
 scalar code extends string;
 
+model UsingNode
+{
+    id: string;
+    schemaPrefix?: path;
+}
+
 model IfcxNode {
     identifier: path;
+    "using": UsingNode[];
     children?: Record<string | null>;
     inherits?: Record<string | null>;
     attributes?: Record<unknown>;
 }
 
 model IfcxHeader {
+    id: string;
     version: string;
     author: string;
     timestamp: string;
@@ -34,7 +42,8 @@ enum DataType
     Enum: "Enum",
     Array: "Array",
     Object: "Object",
-    Relation: "Relation"
+    Relation: "Relation",
+    Blob: "Blob"
 }
 
 model EnumRestrictions
