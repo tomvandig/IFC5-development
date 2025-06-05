@@ -6,10 +6,12 @@ export function ExampleFile(attribute: string = "example::string", value: any = 
 {
     return {
         header: {
+            id: "",
             version: "ifcx_alpha",
             author: "tom",
             timestamp: "now"
         },
+        using: [],
         schemas: {
             "example::string": {
                 uri: "http://www.example.com/string",
@@ -101,10 +103,12 @@ export function ExampleFileMissingSchema()
 {
     return {
         header: {
+            id: "",
             version: "ifcx_alpha",
             author: "tom",
             timestamp: "now"
         },
+        using: [],
         schemas: {},
         data: [{
             path: "root",
@@ -121,10 +125,12 @@ export function ExampleFileWithSchema(datatype: DataType, data: any)
 {
     return {
         header: {
+            id: "",
             version: "ifcx_alpha",
             author: "tom",
             timestamp: "now"
         },
+        using: [],
         schemas: {
             "example::attribute": {
                 value: {
