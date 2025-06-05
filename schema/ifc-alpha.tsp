@@ -18,8 +18,7 @@ model UsingNode
 }
 
 model IfcxNode {
-    identifier: path;
-    "using": UsingNode[];
+    path: path;
     children?: Record<string | null>;
     inherits?: Record<string | null>;
     attributes?: Record<unknown>;
@@ -89,6 +88,7 @@ model IfcxSchema
 
 model IfcxFile {
     header: IfcxHeader;
+    "using": UsingNode[];
     schemas: Record<IfcxSchema>;
     data: IfcxNode[]
 }
