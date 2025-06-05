@@ -5,6 +5,7 @@ type IfcxFile = components["schemas"]["IfcxFile"];
 type IfcxNode = components["schemas"]["IfcxNode"];
 type IfcxSchema = components["schemas"]["IfcxSchema"];
 type IfcxValueDescription = components["schemas"]["IfcxValueDescription"];
+type UsingNode = components["schemas"]["UsingNode"];
 
 // this is a helper function that makes a regular Map behave as a multi map
 function MMSet<A, B>(map: Map<A, B[]>, key: A, value: B)
@@ -171,11 +172,45 @@ export function Validate(schemas: {[key: string]: IfcxSchema}, inputNodes: Map<s
     })
 }
 
+function FetchUsing(node: UsingNode): IfcxFile
+{
+    return {} as IfcxFile;
+}
+
+// TODO: schema prefixes
+function SatisfyDependencies(activeLayer: IfcxFile, placed: Map<string, boolean>, orderedLayers: IfcxFile[])
+{
+    let pending: IfcxFile[] = [];
+    activeLayer.using.forEach((using) => {
+        if (!placed.has(using.id))
+        {
+            let layer = FetchUsing(using);
+            pending.push(layer);
+            placed.set(using.id, true);
+        }
+    });
+    let temp: IfcxFile[] = [];
+    pending.forEach((layer) => {
+        temp.push(layer);
+        temp.push(...SatisfyDependencies(layer, placed, orderedLayers));
+    });
+
+    return temp;
+}
+
+function BuildLayerSet(activeLayer: IfcxFile)
+{
+    let layerSet: IfcxFile[] = [];
+    SatisfyDependencies(activeLayer, new Map<string, boolean>(), layerSet);
+    return layerSet;
+}
+
 // TODO: cleanup options by creating better API
 export function LoadIfcxFile(file: IfcxFile, checkSchemas: boolean = true, createArtificialRoot: boolean = false)
 {
     let inputNodes = ToInputNodes(file.data);
     let compositionNodes = ConvertNodes(inputNodes);
+
 
     try {
         if (checkSchemas)
@@ -252,6 +287,7 @@ export function Diff(file1: IfcxFile, file2: IfcxFile)
 {
     let result: IfcxFile = {
         header: file1.header,
+        using: [],
         schemas: {},
         data: []
     };
@@ -305,6 +341,7 @@ export function Federate(files: IfcxFile[])
 {
     let result: IfcxFile = {
         header: files[0].header,
+        using: [],
         schemas: {},
         data: []
     };
@@ -364,6 +401,7 @@ function Prune(file: IfcxFile, deleteEmpty: boolean = false)
 {
     let result: IfcxFile = {
         header: file.header,
+        using: [],
         schemas: file.schemas,
         data: []
     };
