@@ -200,12 +200,44 @@ export async function FetchRemoteSchemas(file: IfcxFile)
     })
 }
 
+function FetchUsing(node: UsingNode): IfcxFile
+{
+    return {} as IfcxFile;
+}
+
+// TODO: schema prefixes
+function SatisfyDependencies(activeLayer: IfcxFile, placed: Map<string, boolean>, orderedLayers: IfcxFile[])
+{
+    let pending: IfcxFile[] = [];
+    activeLayer.using.forEach((using) => {
+        if (!placed.has(using.id))
+        {
+            let layer = FetchUsing(using);
+            pending.push(layer);
+            placed.set(using.id, true);
+        }
+    });
+    let temp: IfcxFile[] = [];
+    pending.forEach((layer) => {
+        temp.push(layer);
+        temp.push(...SatisfyDependencies(layer, placed, orderedLayers));
+    });
+
+    return temp;
+}
+
+function BuildLayerSet(activeLayer: IfcxFile)
+{
+    let layerSet: IfcxFile[] = [];
+    SatisfyDependencies(activeLayer, new Map<string, boolean>(), layerSet);
+    return layerSet;
+}
+
 // TODO: cleanup options by creating better API
 export function LoadIfcxFile(file: IfcxFile, checkSchemas: boolean = true, createArtificialRoot: boolean = false)
 {
     let inputNodes = ToInputNodes(file.data);
     let compositionNodes = ConvertNodes(inputNodes);
-
 
     try {
         if (checkSchemas)
