@@ -447,6 +447,20 @@ var autoCamera = true;
 var THREE = window["THREE"];
 function init() {
   scene = new THREE.Scene();
+
+  // lights
+  const ambient = new THREE.AmbientLight(0xddeeff, 0.4);
+  scene.add(ambient);
+  const keyLight = new THREE.DirectionalLight(0xffffff, 1.0);
+  keyLight.position.set(5, -10, 7.5);
+  scene.add(keyLight);
+  const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
+  fillLight.position.set(-5, 5, 5);
+  scene.add(fillLight);
+  const rimLight = new THREE.DirectionalLight(0xffffff, 0.3);
+  rimLight.position.set(0, 8, -10);
+  scene.add(rimLight);
+
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
   camera.up.set(0, 0, 1);
   camera.position.set(50, 50, 50);
@@ -513,7 +527,7 @@ function createMeshFromJson(path) {
   geometry.setIndex(new THREE.BufferAttribute(indices, 1));
   geometry.computeVertexNormals();
   const material = createMaterialFromParent(path);
-  let meshMaterial = new THREE.MeshBasicMaterial({ ...material });
+  let meshMaterial = new THREE.MeshLambertMaterial({ ...material });
   return new THREE.Mesh(geometry, meshMaterial);
 }
 function traverseTree(nodes, parent) {
@@ -559,7 +573,7 @@ function buildDomTree(prim, node) {
   Object.entries(icons).forEach(([k, v]) => span.innerText += (prim.attributes || {})[k] ? v : " ");
   span.className = "material-symbols-outlined";
   elem.onclick = (evt) => {
-    let rows = [["name", prim.name]].concat(Object.entries(prim.attributes)).map(([k, v]) => `<tr><td>${encodeHtmlEntities(k)}</td><td>${encodeHtmlEntities(typeof v === "object" ? JSON.stringify(v) : v)}</td>`).join("");
+    let rows = [["name", prim.name]].concat(Object.entries(prim.attributes || {})).map(([k, v]) => `<tr><td>${encodeHtmlEntities(k)}</td><td>${encodeHtmlEntities(typeof v === "object" ? JSON.stringify(v) : v)}</td>`).join("");
     document.querySelector(".attributes .table").innerHTML = `<table border="0">${rows}</table>`;
     evt.stopPropagation();
   };
@@ -568,7 +582,8 @@ function buildDomTree(prim, node) {
 }
 function composeAndRender() {
   if (scene) {
-    scene.children = [];
+    // retain only the lights
+    scene.children = scene.children.filter(n => n instanceof THREE.Light);
   }
   document.querySelector(".tree").innerHTML = "";
   if (datas.length === 0) {
